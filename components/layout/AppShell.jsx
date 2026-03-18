@@ -56,10 +56,15 @@ export default function AppShell({ children }) {
     }
   };
 
+  const PROTECTED_EMAILS = ['admin@repoai.com', 'demo@repoai.com'];
+  const isProtectedUser = PROTECTED_EMAILS.includes(user?.email);
+
   const userMenu = {
     items: [
-      { key: 'changePwd', icon: <LockOutlined />, label: '修改密码' },
-      { type: 'divider' },
+      ...(!isProtectedUser ? [
+        { key: 'changePwd', icon: <LockOutlined />, label: '修改密码' },
+        { type: 'divider' },
+      ] : []),
       { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', danger: true },
     ],
     onClick: ({ key }) => {

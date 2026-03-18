@@ -4,9 +4,15 @@ import bcrypt from 'bcryptjs';
 import { getAuthUser, unauthorized } from '@/lib/auth';
 import User from '@/models/User';
 
+const PROTECTED_EMAILS = ['admin@repoai.com', 'demo@repoai.com'];
+
 export async function POST(request) {
   const authUser = await getAuthUser(request);
   if (!authUser) return unauthorized();
+
+  if (PROTECTED_EMAILS.includes(authUser.email)) {
+    return NextResponse.json({ error: '演示账号不允许修改密码' }, { status: 403 });
+  }
 
   try {
     const { currentPassword, newPassword } = await request.json();
