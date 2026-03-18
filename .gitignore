@@ -85,7 +85,13 @@ tmp/
 *.tmp
 *.bak
 
-# Tesseract 训练数据（大文件）
+# Tesseract 训练数据（大文件，旧版遗留）
 backend/chi_sim.traineddata
 backend/eng.traineddata
 backend/tessdata/
+
+# Next.js 本地环境变量
+.env.local
+
+# PDF 字体文件（可选，运行 scripts/download-fonts.js 生成）
+# public/fonts/

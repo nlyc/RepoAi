@@ -233,6 +233,13 @@ INSERT INTO templates (name, category, content, is_builtin, sort_order) VALUES
 - 风险提示：[风险说明或"暂无风险"]', TRUE, 12);
 
 -- ============================================================
+-- 创建管理员账号（密码: admin123456）
+-- ============================================================
+INSERT INTO users (email, password_hash, nickname, role) VALUES
+('admin@repoai.com', crypt('admin123456', gen_salt('bf')), '管理员', 'admin')
+ON CONFLICT (email) DO NOTHING;
+
+-- ============================================================
 -- 创建演示账号（密码: demo123456）
 -- 生产环境请删除此行
 -- ============================================================

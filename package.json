@@ -1,0 +1,38 @@
+{
+  "name": "repoai",
+  "version": "2.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "@ant-design/nextjs-registry": "^1.0.1",
+    "antd": "^5.14.0",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
+    "docx": "^8.5.0",
+    "jose": "^5.2.4",
+    "mammoth": "^1.7.2",
+    "marked": "^12.0.0",
+    "next": "^14.2.3",
+    "openai": "^4.38.5",
+    "pdfkit": "^0.15.0",
+    "pg": "^8.11.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
+    "remark-gfm": "^4.0.0",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "^14.2.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
