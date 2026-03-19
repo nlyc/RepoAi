@@ -1,5 +1,6 @@
 'use client';
-// components/layout/AppShell.jsx - 主布局（侧边栏 + 顶栏�?import { useEffect, useState } from 'react';
+// components/layout/AppShell.jsx - 主布局（侧边栏 + 顶栏）
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Layout, Menu, Avatar, Dropdown, Typography, Space, Modal, Form, Input, message } from 'antd';
 import {
@@ -15,7 +16,7 @@ const { Sider, Content, Header } = Layout;
 
 const baseMenuItems = [
   { key: '/',           icon: <FileTextOutlined />, label: '生成汇报' },
-  { key: '/templates',  icon: <BookOutlined />,     label: '话术�? },
+  { key: '/templates',  icon: <BookOutlined />,     label: '话术库' },
   { key: '/history',    icon: <HistoryOutlined />,  label: '历史汇报' },
 ];
 
@@ -64,7 +65,7 @@ export default function AppShell({ children }) {
         { key: 'changePwd', icon: <LockOutlined />, label: '修改密码' },
         { type: 'divider' },
       ] : []),
-      { key: 'logout', icon: <LogoutOutlined />, label: '退出登�?, danger: true },
+      { key: 'logout', icon: <LogoutOutlined />, label: '退出登录', danger: true },
     ],
     onClick: ({ key }) => {
       if (key === 'logout') { logout(); router.push('/login'); }
@@ -131,10 +132,10 @@ export default function AppShell({ children }) {
         width={400}
       >
         <Form form={pwdForm} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item label="当前密码" name="currentPassword" rules={[{ required: true, message: '请输入当前密�? }]}>
+          <Form.Item label="当前密码" name="currentPassword" rules={[{ required: true, message: '请输入当前密码' }]}>
             <Input.Password prefix={<LockOutlined />} placeholder="当前密码" />
           </Form.Item>
-          <Form.Item label="新密�? name="newPassword" rules={[{ required: true, message: '请输入新密码' }, { min: 6, message: '至少6�? }]}>
+          <Form.Item label="新密码" name="newPassword" rules={[{ required: true, message: '请输入新密码' }, { min: 6, message: '至少6位' }]}>
             <Input.Password prefix={<LockOutlined />} placeholder="新密码（至少6位）" />
           </Form.Item>
         </Form>
