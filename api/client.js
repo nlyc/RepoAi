@@ -1,8 +1,44 @@
-// api/client.js - 原生 fetch 封装，自动附加 JWT（替代 axios，兼容 Vercel serverless）
-// 注意：useAppStore 不在顶层引入，避免服务端打包时解析浏览器专属模块失败
+// api/client.js - 原生 fetch 封装，自动附加 JWT
+// ⚠️ 零外部依赖：不引入任何模块，兼容 Vercel serverless 打包
 
 const BASE_URL = '/api';
-const TIMEOUT_MS = 90000; // 大模型调用可能较慢
+const TIMEOUT_MS = 90000;
+const STORE_KEY = 'repoai-store'; // 与 useAppStore persist name 保持一致
+
+/**
+ * 从 localStorage 中读取 Zustand 持久化的 token
+ * 仅在浏览器环境中执行，服务端返回 null
+ */
+function getToken() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    return data?.state?.token ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 清除 localStorage 中的认证状态并跳转登录页
+ */
+function handleUnauthorized() {
+  if (typeof window === 'undefined') return;
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) {
+      const data = JSON.parse(raw);
+      if (data?.state) {
+        data.state.token = null;
+        data.state.user = null;
+        localStorage.setItem(STORE_KEY, JSON.stringify(data));
+      }
+    }
+  } catch {}
+  window.location.href = '/login';
+}
 
 /**
  * 带超时的 fetch
@@ -17,29 +53,19 @@ function fetchWithTimeout(url, options = {}) {
 
 /**
  * 统一请求入口
- * @param {string} path  - 如 '/auth/login'
- * @param {object} options - fetch options（method, body, headers 等）
  */
 async function request(path, options = {}) {
-  // 在浏览器环境中才获取 token 和登出方法
-  let token = null;
-  let logout = null;
-  if (typeof window !== 'undefined') {
-    // 动态引入，避免服务端打包时解析失败
-    const { default: useAppStore } = await import('@/store/useAppStore');
-    token = useAppStore.getState().token;
-    logout = useAppStore.getState().logout;
-  }
+  const token = getToken();
 
-  // 若调用方已在 options.headers 中设置了 Content-Type（如 multipart），则优先使用
+  // 若调用方已设置 Content-Type（如 multipart），则不覆盖
+  const hasContentType = !!(options.headers?.['Content-Type']);
+  const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
+
   const headers = {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...(!isFormData && !hasContentType ? { 'Content-Type': 'application/json' } : {}),
     ...(options.headers || {}),
   };
-  // 若没有 Content-Type 且不是 FormData，默认使用 JSON
-  if (!headers['Content-Type'] && !(options.body instanceof FormData)) {
-    headers['Content-Type'] = 'application/json';
-  }
 
   let res;
   try {
@@ -48,26 +74,25 @@ async function request(path, options = {}) {
       headers,
     });
   } catch (err) {
-    // 超时或网络错误
-    return Promise.reject({ error: err.message || 'Network error' });
+    return Promise.reject({ error: err.name === 'AbortError' ? '请求超时' : (err.message || 'Network error') });
   }
 
   if (res.status === 401) {
-    if (typeof window !== 'undefined' && logout) {
-      logout();
-      window.location.href = '/login';
-    }
+    handleUnauthorized();
     return Promise.reject({ error: 'Unauthorized' });
   }
 
-  // 解析响应体
-  let data;
   const contentType = res.headers.get('content-type') || '';
-  if (contentType.includes('application/json')) {
-    data = await res.json();
-  } else {
-    // 二进制流（如文件下载）直接返回 Response
+  if (!contentType.includes('application/json')) {
+    // 二进制流（如文件下载）直接返回 Response 对象
     return res;
+  }
+
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    return Promise.reject({ error: '响应解析失败' });
   }
 
   if (!res.ok) {
@@ -101,14 +126,11 @@ const client = {
    */
   post: (path, body, config) => {
     const extraHeaders = config?.headers || {};
-    // 若是 FormData，不设置 Content-Type（浏览器自动添加 boundary）
     const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
     return request(path, {
       method: 'POST',
       body: isFormData ? body : JSON.stringify(body),
-      headers: isFormData
-        ? extraHeaders
-        : { 'Content-Type': 'application/json', ...extraHeaders },
+      headers: extraHeaders,
     });
   },
 
@@ -117,7 +139,7 @@ const client = {
     return request(path, {
       method: 'PUT',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', ...extraHeaders },
+      headers: extraHeaders,
     });
   },
 
@@ -128,7 +150,7 @@ const client = {
     return request(path, {
       method: 'PATCH',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json', ...extraHeaders },
+      headers: extraHeaders,
     });
   },
 };
