@@ -10,12 +10,12 @@ import {
   SearchOutlined, EditOutlined, UnlockOutlined, HistoryOutlined, ReloadOutlined, SafetyOutlined,
 } from '@ant-design/icons';
 import useAppStore from '@/store/useAppStore';
-import client from '@/api/client';
+import client from '@/apiclient/client';
 
 const { Title, Text } = Typography;
 
 const ROLE_CONFIG = {
-  admin: { color: 'red',     label: '管理员' },
+  admin: { color: 'red',     label: '管理�? },
   pro:   { color: 'blue',    label: 'Pro' },
   free:  { color: 'default', label: '免费' },
 };
@@ -31,8 +31,7 @@ export default function AdminPage() {
   const router = useRouter();
   const user = useAppStore(s => s.user);
 
-  // 用户列表状态
-  const [users, setUsers]       = useState([]);
+  // 用户列表状�?  const [users, setUsers]       = useState([]);
   const [total, setTotal]       = useState(0);
   const [page, setPage]         = useState(1);
   const [search, setSearch]     = useState('');
@@ -56,8 +55,7 @@ export default function AdminPage() {
   const [histPage, setHistPage]         = useState(1);
   const [histLoading, setHistLoading]   = useState(false);
 
-  // 权限检查
-  useEffect(() => {
+  // 权限检�?  useEffect(() => {
     if (user && user.role !== 'admin') {
       message.error('无权访问');
       router.push('/');
@@ -84,7 +82,7 @@ export default function AdminPage() {
   // 编辑用户
   const openEdit = (record) => {
     if (isProtected(record.email)) {
-      message.warning('系统内置账号不允许修改');
+      message.warning('系统内置账号不允许修�?);
       return;
     }
     setEditTarget(record);
@@ -114,7 +112,7 @@ export default function AdminPage() {
     const { newPassword, adminKey } = await pwdForm.validateFields();
     try {
       await client.post(`/admin/users/${pwdTarget.id}/reset-password`, { newPassword, adminKey });
-      message.success('密码已重置');
+      message.success('密码已重�?);
       setPwdVisible(false);
     } catch (err) {
       message.error(err?.response?.data?.error || '重置失败');
@@ -173,14 +171,14 @@ export default function AdminPage() {
         const locked = isProtected(record.email);
         return (
           <Space>
-            <Tooltip title={locked ? '系统内置账号，不可编辑' : '编辑用户'}>
+            <Tooltip title={locked ? '系统内置账号，不可编�? : '编辑用户'}>
               <Button
                 size="small" icon={<EditOutlined />}
                 onClick={() => openEdit(record)}
                 disabled={locked}
               />
             </Tooltip>
-            <Tooltip title={locked ? '系统内置账号，不可重置密码' : '重置密码'}>
+            <Tooltip title={locked ? '系统内置账号，不可重置密�? : '重置密码'}>
               <Button
                 size="small" icon={<UnlockOutlined />}
                 onClick={() => openPwd(record)}
@@ -206,10 +204,10 @@ export default function AdminPage() {
     {
       title: '标题',
       dataIndex: 'title',
-      render: (v) => v || <Text type="secondary">（无标题）</Text>,
+      render: (v) => v || <Text type="secondary">（无标题�?/Text>,
     },
     {
-      title: '状态',
+      title: '状�?,
       dataIndex: 'status',
       width: 80,
       render: (v) => <Badge status={v === 'done' ? 'success' : v === 'error' ? 'error' : 'processing'} text={v} />,
@@ -240,7 +238,7 @@ export default function AdminPage() {
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 16 }}>
       {/* 顶栏 */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Title level={5} style={{ margin: 0 }}>用户管理 <Text type="secondary" style={{ fontSize: 13, fontWeight: 400 }}>共 {total} 人</Text></Title>
+        <Title level={5} style={{ margin: 0 }}>用户管理 <Text type="secondary" style={{ fontSize: 13, fontWeight: 400 }}>�?{total} �?/Text></Title>
         <Space>
           <Input
             placeholder="搜索邮箱/昵称"
@@ -263,7 +261,7 @@ export default function AdminPage() {
         columns={columns}
         pagination={{
           current: page, pageSize: 20, total,
-          showTotal: (t) => `共 ${t} 条`,
+          showTotal: (t) => `�?${t} 条`,
           onChange: (p) => setPage(p),
         }}
         style={{ flex: 1 }}
@@ -271,7 +269,7 @@ export default function AdminPage() {
 
       {/* 编辑用户弹窗 */}
       <Modal
-        title={`编辑用户 — ${editTarget?.nickname || editTarget?.email}`}
+        title={`编辑用户 �?${editTarget?.nickname || editTarget?.email}`}
         open={editVisible}
         onOk={submitEdit}
         onCancel={() => { setEditVisible(false); editForm.resetFields(); }}
@@ -281,20 +279,20 @@ export default function AdminPage() {
       >
         <Form form={editForm} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item
-            label="管理员 KEY"
+            label="管理�?KEY"
             name="adminKey"
             rules={[{ required: true, message: '请输入管理员安全 KEY' }]}
           >
             <Input.Password prefix={<SafetyOutlined />} placeholder="请输入管理员安全 KEY" />
           </Form.Item>
-          <Form.Item label="昵称" name="nickname" rules={[{ required: true, message: '请填写昵称' }]}>
+          <Form.Item label="昵称" name="nickname" rules={[{ required: true, message: '请填写昵�? }]}>
             <Input />
           </Form.Item>
           <Form.Item label="角色" name="role" rules={[{ required: true }]}>
             <Select options={[
               { value: 'free',  label: '免费用户' },
               { value: 'pro',   label: 'Pro 用户' },
-              { value: 'admin', label: '管理员' },
+              { value: 'admin', label: '管理�? },
             ]} />
           </Form.Item>
         </Form>
@@ -302,7 +300,7 @@ export default function AdminPage() {
 
       {/* 重置密码弹窗 */}
       <Modal
-        title={`重置密码 — ${pwdTarget?.nickname || pwdTarget?.email}`}
+        title={`重置密码 �?${pwdTarget?.nickname || pwdTarget?.email}`}
         open={pwdVisible}
         onOk={submitPwd}
         onCancel={() => setPwdVisible(false)}
@@ -312,25 +310,25 @@ export default function AdminPage() {
       >
         <Form form={pwdForm} layout="vertical" style={{ marginTop: 16 }}>
           <Form.Item
-            label="管理员 KEY"
+            label="管理�?KEY"
             name="adminKey"
             rules={[{ required: true, message: '请输入管理员 KEY' }]}
           >
             <Input.Password placeholder="请输入管理员安全 KEY" />
           </Form.Item>
           <Form.Item
-            label="新密码"
+            label="新密�?
             name="newPassword"
-            rules={[{ required: true, message: '请输入新密码' }, { min: 6, message: '至少6位' }]}
+            rules={[{ required: true, message: '请输入新密码' }, { min: 6, message: '至少6�? }]}
           >
-            <Input.Password placeholder="至少6位" />
+            <Input.Password placeholder="至少6�? />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 操作历史抽屉 */}
       <Drawer
-        title={`操作历史 — ${histTarget?.nickname || histTarget?.email}`}
+        title={`操作历史 �?${histTarget?.nickname || histTarget?.email}`}
         open={histVisible}
         onClose={() => setHistVisible(false)}
         width={720}
@@ -343,7 +341,7 @@ export default function AdminPage() {
           columns={histColumns}
           pagination={{
             current: histPage, pageSize: 15, total: histTotal,
-            showTotal: (t) => `共 ${t} 条`,
+            showTotal: (t) => `�?${t} 条`,
             onChange: (p) => openHist(histTarget, p),
           }}
         />

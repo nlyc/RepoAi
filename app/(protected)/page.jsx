@@ -5,9 +5,9 @@ import { Row, Col, Card, Form, Select, Button, Input, Upload, Checkbox, App, Spi
 import { InboxOutlined, ThunderboltFilled, CopyOutlined, DownloadOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { generateReport, exportReport } from '@/api/reports';
-import { getTemplates } from '@/api/templates';
-import { getQuotaStatus } from '@/api/quota';
+import { generateReport, exportReport } from '@/apiclient/reports';
+import { getTemplates } from '@/apiclient/templates';
+import { getQuotaStatus } from '@/apiclient/quota';
 import useAppStore from '@/store/useAppStore';
 
 const { Dragger } = Upload;

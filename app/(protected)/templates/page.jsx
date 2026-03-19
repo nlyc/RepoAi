@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, Table, Button, Modal, Form, Input, Select, Space, Popconfirm, Upload, App, Tag, Tooltip, Pagination, Typography } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, ImportOutlined, ExportOutlined } from '@ant-design/icons';
-import { getTemplates, createTemplate, updateTemplate, deleteTemplate, importTemplates, exportTemplates } from '@/api/templates';
+import { getTemplates, createTemplate, updateTemplate, deleteTemplate, importTemplates, exportTemplates } from '@/apiclient/templates';
 
 const { TextArea } = Input;
 
@@ -37,15 +37,15 @@ export default function TemplatesPage() {
 
   const handleSave = async (values) => {
     try {
-      if (editingTemplate) { await updateTemplate(editingTemplate.id, values); message.success('模板已更新'); }
-      else { await createTemplate(values); message.success('模板已创建'); }
+      if (editingTemplate) { await updateTemplate(editingTemplate.id, values); message.success('模板已更�?); }
+      else { await createTemplate(values); message.success('模板已创�?); }
       setModalOpen(false);
       fetchTemplates();
     } catch (err) { message.error(err.error || '操作失败'); }
   };
 
   const handleDelete = async (id) => {
-    try { await deleteTemplate(id); message.success('已删除'); fetchTemplates(); }
+    try { await deleteTemplate(id); message.success('已删�?); fetchTemplates(); }
     catch (err) { message.error(err.error || '删除失败'); }
   };
 
@@ -58,7 +58,7 @@ export default function TemplatesPage() {
         const res = await importTemplates(arr);
         message.success(`成功导入 ${res.imported} 条模板`);
         fetchTemplates();
-      } catch { message.error('导入失败，请检查 JSON 格式'); }
+      } catch { message.error('导入失败，请检�?JSON 格式'); }
     };
     reader.readAsText(file);
     return false;
@@ -80,13 +80,13 @@ export default function TemplatesPage() {
     { title: '模板名称', dataIndex: 'name', key: 'name', width: 200 },
     { title: '分类', dataIndex: 'category', key: 'category', width: 100, render: (cat) => <Tag color={CATEGORY_COLORS[cat]}>{CATEGORY_OPTIONS.find(o => o.value === cat)?.label || cat}</Tag> },
     { title: '内容预览', dataIndex: 'content', key: 'content', render: (text) => <Tooltip title={text}><span style={{ color: '#666' }}>{text.slice(0, 60)}...</span></Tooltip> },
-    { title: '来源', dataIndex: 'is_builtin', key: 'is_builtin', width: 80, render: (v) => <Tag color={v ? 'cyan' : 'default'}>{v ? '内置' : '自定义'}</Tag> },
+    { title: '来源', dataIndex: 'is_builtin', key: 'is_builtin', width: 80, render: (v) => <Tag color={v ? 'cyan' : 'default'}>{v ? '内置' : '自定�?}</Tag> },
     {
       title: '操作', key: 'action', width: 120,
       render: (_, record) => record.is_builtin ? null : (
         <Space>
           <Button size="small" icon={<EditOutlined />} onClick={() => openEdit(record)} />
-          <Popconfirm title="确认删除？" onConfirm={() => handleDelete(record.id)}>
+          <Popconfirm title="确认删除�? onConfirm={() => handleDelete(record.id)}>
             <Button size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
@@ -96,7 +96,7 @@ export default function TemplatesPage() {
 
   return (
     <Card
-      title="话术库"
+      title="话术�?
       style={{ height: '100%', display: 'flex', flexDirection: 'column' }}
       styles={{ body: { flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 0 } }}
       extra={
@@ -118,7 +118,7 @@ export default function TemplatesPage() {
         <Pagination current={tablePage} total={templates.length} pageSize={tablePageSize} showSizeChanger
           pageSizeOptions={['10', '20', '50', '100']}
           onChange={(p, size) => { setTablePage(p); setTablePageSize(size); }} size="small" />
-        <Typography.Text type="secondary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>共 {templates.length} 条</Typography.Text>
+        <Typography.Text type="secondary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>�?{templates.length} �?/Typography.Text>
       </div>
 
       <Modal title={editingTemplate ? '编辑模板' : '新建模板'} open={modalOpen}
@@ -131,7 +131,7 @@ export default function TemplatesPage() {
             <Select options={CATEGORY_OPTIONS} />
           </Form.Item>
           <Form.Item name="content" label="话术内容" rules={[{ required: true }]}>
-            <TextArea rows={8} placeholder="输入话术模板内容，支持 [占位符] 格式..." showCount maxLength={2000} />
+            <TextArea rows={8} placeholder="输入话术模板内容，支�?[占位符] 格式..." showCount maxLength={2000} />
           </Form.Item>
         </Form>
       </Modal>

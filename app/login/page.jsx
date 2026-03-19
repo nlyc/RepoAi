@@ -1,10 +1,9 @@
 'use client';
-// app/login/page.jsx - 登录/注册页
-import { useState, useMemo } from 'react';
+// app/login/page.jsx - 登录/注册�?import { useState, useMemo } from 'react';
 import { Card, Form, Input, Button, Tabs, Typography, App, Space } from 'antd';
 import { UserOutlined, LockOutlined, MailOutlined, LoginOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
-import { login, register } from '@/api/auth';
+import { login, register } from '@/apiclient/auth';
 import useAppStore from '@/store/useAppStore';
 
 function useLandscapeBg() {
@@ -43,7 +42,7 @@ export default function LoginPage() {
     try {
       const res = await register(values);
       setAuth(res.user, res.token);
-      message.success('注册成功，欢迎使用 RepoAI');
+      message.success('注册成功，欢迎使�?RepoAI');
       router.push('/');
     } catch (err) {
       message.error(err.error || '注册失败');
@@ -91,10 +90,10 @@ export default function LoginPage() {
               key: 'login', label: '登录',
               children: (
                 <Form form={loginForm} onFinish={handleLogin} size="large">
-                  <Form.Item name="email" rules={[{ required: true, type: 'email', message: '请输入有效邮箱' }]}>
+                  <Form.Item name="email" rules={[{ required: true, type: 'email', message: '请输入有效邮�? }]}>
                     <Input prefix={<MailOutlined />} placeholder="邮箱" />
                   </Form.Item>
-                  <Form.Item name="password" rules={[{ required: true, message: '请输入密码' }]}>
+                  <Form.Item name="password" rules={[{ required: true, message: '请输入密�? }]}>
                     <Input.Password prefix={<LockOutlined />} placeholder="密码" />
                   </Form.Item>
                   <Form.Item>
@@ -108,14 +107,14 @@ export default function LoginPage() {
               key: 'register', label: '注册',
               children: (
                 <Form onFinish={handleRegister} size="large">
-                  <Form.Item name="nickname" rules={[{ required: true, message: '请输入昵称' }]}>
+                  <Form.Item name="nickname" rules={[{ required: true, message: '请输入昵�? }]}>
                     <Input prefix={<UserOutlined />} placeholder="昵称" />
                   </Form.Item>
-                  <Form.Item name="email" rules={[{ required: true, type: 'email', message: '请输入有效邮箱' }]}>
+                  <Form.Item name="email" rules={[{ required: true, type: 'email', message: '请输入有效邮�? }]}>
                     <Input prefix={<MailOutlined />} placeholder="邮箱" />
                   </Form.Item>
-                  <Form.Item name="password" rules={[{ required: true, min: 6, message: '密码至少6位' }]}>
-                    <Input.Password prefix={<LockOutlined />} placeholder="密码（至少6位）" />
+                  <Form.Item name="password" rules={[{ required: true, min: 6, message: '密码至少6�? }]}>
+                    <Input.Password prefix={<LockOutlined />} placeholder="密码（至�?位）" />
                   </Form.Item>
                   <Form.Item>
                     <Button type="primary" htmlType="submit" block loading={loading}>注册</Button>
@@ -127,8 +126,7 @@ export default function LoginPage() {
           {activeTab === 'login' && (
             <div style={{ marginTop: 24, textAlign: 'center' }}>
               <Typography.Text type="secondary" style={{ marginBottom: 12, display: 'block' }}>
-                或使用以下账号快速登录
-              </Typography.Text>
+                或使用以下账号快速登�?              </Typography.Text>
               <Space direction="vertical" style={{ width: '100%' }}>
                 <Button
                   block
@@ -136,7 +134,7 @@ export default function LoginPage() {
                   onClick={() => handleQuickLogin('admin@repoai.com', 'admin123456')}
                   style={{ background: '#fff7e6', borderColor: '#ffa940', color: '#d46b08' }}
                 >
-                  👑 管理员 &nbsp;<Typography.Text type="secondary" style={{ fontSize: 11 }}>admin@repoai.com / admin123456</Typography.Text>
+                  👑 管理�?&nbsp;<Typography.Text type="secondary" style={{ fontSize: 11 }}>admin@repoai.com / admin123456</Typography.Text>
                 </Button>
                 <Button
                   block
@@ -152,8 +150,7 @@ export default function LoginPage() {
         </Card>
         <div style={{ textAlign: 'center', marginTop: 12 }}>
           <Typography.Text type="secondary" style={{ fontSize: 12 }}>
-            联系我们：
-          </Typography.Text>
+            联系我们�?          </Typography.Text>
           <Typography.Link href="mailto:ncly800101@gmail.com" style={{ fontSize: 12 }}>
             ncly800101@gmail.com
           </Typography.Link>

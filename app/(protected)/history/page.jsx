@@ -5,7 +5,7 @@ import { Card, Table, Button, Tag, Modal, Space, Popconfirm, App, Empty, Select,
 import { EyeOutlined, DeleteOutlined, DownloadOutlined, CopyOutlined } from '@ant-design/icons';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getReports, getReport, deleteReport, exportReport } from '@/api/reports';
+import { getReports, getReport, deleteReport, exportReport } from '@/apiclient/reports';
 
 const TYPE_LABELS = { weekly: '周报', monthly: '月报', standup: '晨会', review: '述职' };
 const TYPE_COLORS = { weekly: 'blue', monthly: 'green', standup: 'orange', review: 'purple' };
@@ -56,7 +56,7 @@ export default function HistoryPage() {
   const handleDelete = async (id) => {
     try {
       await deleteReport(id);
-      message.success('已删除');
+      message.success('已删�?);
       const remaining = reports.length - 1;
       const targetPage = remaining === 0 && page > 1 ? page - 1 : page;
       setPage(targetPage);
@@ -71,7 +71,7 @@ export default function HistoryPage() {
 
   const handleCopy = async () => {
     if (!previewReport?.output_text) return;
-    try { await navigator.clipboard.writeText(previewReport.output_text); message.success('已复制到剪贴板'); }
+    try { await navigator.clipboard.writeText(previewReport.output_text); message.success('已复制到剪贴�?); }
     catch { message.error('复制失败，请手动选择文本复制'); }
   };
 
@@ -79,7 +79,7 @@ export default function HistoryPage() {
     { title: '序号', key: 'index', width: 60, align: 'center', render: (_, __, i) => (page - 1) * pageSize + i + 1 },
     {
       title: '标题', dataIndex: 'title', key: 'title',
-      render: (text, record) => <Button type="link" style={{ padding: 0 }} onClick={() => handlePreview(record)}>{text || '未命名汇报'}</Button>,
+      render: (text, record) => <Button type="link" style={{ padding: 0 }} onClick={() => handlePreview(record)}>{text || '未命名汇�?}</Button>,
     },
     { title: '类型', dataIndex: 'report_type', key: 'report_type', width: 90, render: (t) => <Tag color={TYPE_COLORS[t]}>{TYPE_LABELS[t] || t}</Tag> },
     { title: '生成时间', dataIndex: 'created_at', key: 'created_at', width: 180, render: (t) => <span style={{ whiteSpace: 'nowrap' }}>{new Date(t).toLocaleString('zh-CN')}</span> },
@@ -90,7 +90,7 @@ export default function HistoryPage() {
           <Button size="small" icon={<EyeOutlined />} onClick={() => handlePreview(record)}>预览</Button>
           <Button size="small" icon={<DownloadOutlined />} onClick={() => handleExport(record.id, 'md')}>MD</Button>
           <Button size="small" icon={<DownloadOutlined />} onClick={() => handleExport(record.id, 'docx')}>Word</Button>
-          <Popconfirm title="确认删除？" onConfirm={() => handleDelete(record.id)}>
+          <Popconfirm title="确认删除�? onConfirm={() => handleDelete(record.id)}>
             <Button size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
@@ -112,7 +112,7 @@ export default function HistoryPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 16px 8px' }}>
           <Pagination current={page} total={total} pageSize={pageSize} showSizeChanger
             pageSizeOptions={['10', '20', '50', '100']} onChange={handleTableChange} size="small" />
-          <Typography.Text type="secondary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>共 {total} 条</Typography.Text>
+          <Typography.Text type="secondary" style={{ fontSize: 13, whiteSpace: 'nowrap' }}>�?{total} �?/Typography.Text>
         </div>
       </Card>
 
@@ -131,7 +131,7 @@ export default function HistoryPage() {
         width={800}
       >
         {previewLoading ? (
-          <div style={{ textAlign: 'center', padding: '40px 0', color: '#999' }}>加载中…</div>
+          <div style={{ textAlign: 'center', padding: '40px 0', color: '#999' }}>加载中�?/div>
         ) : previewReport?.output_text ? (
           <div style={{ maxHeight: '60vh', overflow: 'auto', padding: '0 8px' }}>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{previewReport.output_text}</ReactMarkdown>
