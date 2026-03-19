@@ -1,5 +1,5 @@
 // api/client.js - 原生 fetch 封装，自动附加 JWT（替代 axios，兼容 Vercel serverless）
-import useAppStore from '@/store/useAppStore';
+// 注意：useAppStore 不在顶层引入，避免服务端打包时解析浏览器专属模块失败
 
 const BASE_URL = '/api';
 const TIMEOUT_MS = 90000; // 大模型调用可能较慢
@@ -21,7 +21,15 @@ function fetchWithTimeout(url, options = {}) {
  * @param {object} options - fetch options（method, body, headers 等）
  */
 async function request(path, options = {}) {
-  const token = useAppStore.getState().token;
+  // 在浏览器环境中才获取 token 和登出方法
+  let token = null;
+  let logout = null;
+  if (typeof window !== 'undefined') {
+    // 动态引入，避免服务端打包时解析失败
+    const { default: useAppStore } = await import('@/store/useAppStore');
+    token = useAppStore.getState().token;
+    logout = useAppStore.getState().logout;
+  }
 
   // 若调用方已在 options.headers 中设置了 Content-Type（如 multipart），则优先使用
   const headers = {
@@ -45,8 +53,8 @@ async function request(path, options = {}) {
   }
 
   if (res.status === 401) {
-    if (typeof window !== 'undefined') {
-      useAppStore.getState().logout();
+    if (typeof window !== 'undefined' && logout) {
+      logout();
       window.location.href = '/login';
     }
     return Promise.reject({ error: 'Unauthorized' });
